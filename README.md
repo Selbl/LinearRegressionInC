@@ -31,6 +31,15 @@ Then you can run it by executing:
 ./LinearReg
 ```
 
+The table below is an example output of the code:
+
+| Independent Variable | Parameter Value | Confidence Interval    | p-value |
+|----------------------|-----------------|------------------------|---------|
+| purchase_amount      | 2.9228          | (2.9002, 2.9454)      | 0.0000  |
+| age                  | -0.5634         | (-0.5763, -0.5505)    | 0.0000  |
+| loyalty_score        | -1.3759         | (-2.5559, -0.1960)    | 0.0223  |
+
+
 ## Limitations
 
 So far, the code only works with numerical variables. It also only does a simple regression and does not consider the possibility of interaction or squared terms.
