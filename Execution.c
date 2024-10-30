@@ -86,19 +86,38 @@ int loadCSV(const char *filename, char ***headers, Matrix *matrix, char *delim) 
 
     // Read numerical data
     while (fgets(line, sizeof(line), file)) {
-        matrix->rows++;
-        matrix->data = (double *)realloc(matrix->data, matrix->rows * matrix->cols * sizeof(double));
-        if (matrix->data == NULL) {
-            printf("Memory allocation failed for matrix data!\n");
-            fclose(file);
-            return 0;
+        // Copy line for checking missing value
+        char *tempLine = strdup(line);
+        char *token = strtok(tempLine, delim);
+        // Raise a flag for whether the row is valid or not
+        int validRow = 1;
+        
+        // Check for missing values
+        for (int i = 0; i < matrix->cols; i++) {
+            if (token == NULL || strcmp(token, "") == 0) {
+                validRow = 0;
+                break;
+            }
+            token = strtok(NULL, delim);
         }
 
-        char *token = strtok(line, delim);
-        for (col = 0; col < matrix->cols; col++) {
-            // Convert token to double
-            matrix->data[(matrix->rows - 1) * matrix->cols + col] = atof(token);
-            token = strtok(NULL, delim);
+        free(tempLine); // Free the copy of the line after checking
+
+        // If row has no missing values, load it into matrix
+        if (validRow) {
+            matrix->rows++;
+            matrix->data = (double *)realloc(matrix->data, matrix->rows * matrix->cols * sizeof(double));
+            if (matrix->data == NULL) {
+                printf("Memory allocation failed for matrix data!\n");
+                fclose(file);
+                return 0;
+            }
+
+            token = strtok(line, delim);
+            for (col = 0; col < matrix->cols; col++) {
+                matrix->data[(matrix->rows - 1) * matrix->cols + col] = atof(token);
+                token = strtok(NULL, delim);
+            }
         }
     }
 
@@ -256,7 +275,7 @@ int createDependentAndIndependentMatrices(char **headers, Matrix *matrix, Matrix
 // Main function
 int main() {
     // Initialize 
-    const char *filename = "data.csv";
+    const char *filename = "dataMissing.csv";
     char **headers = NULL;
     Matrix matrix = {0, 0, NULL};
     // Consider failed load case
