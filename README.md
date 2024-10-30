@@ -7,7 +7,7 @@ Simple code in C to perform Linear Regression using Gradient Descent. The code a
 - Generate indicator variables for ordinal and categorical variables
 - Add support for reading regression instructions from .txt file
 - Add possibility of running multiple regression specifications at once
-- Handle cases with missing values
+- Give the possibility of imputting missing values instead of completely eliminating them
 - Add support for reading other file types
 
 ## Files
